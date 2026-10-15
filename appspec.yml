@@ -1,0 +1,29 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ec2-user/ml-app
+
+file_exists_behavior: OVERWRITE
+
+hooks:
+  BeforeInstall:
+    - location: install_docker.sh
+      timeout: 300
+      runas: root
+
+  ApplicationStop:
+    - location: stop_container.sh
+      timeout: 120
+      runas: root
+
+  AfterInstall:
+    - location: build_image.sh
+      timeout: 600
+      runas: root
+
+  ApplicationStart:
+    - location: start_container.sh
+      timeout: 120
+      runas: root
